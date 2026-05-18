@@ -361,8 +361,21 @@ const totalSurfers = {};
   );
 });
 
-// 2026 YTD from SURFERS ATUAL
+// 2026 YTD from SURFERS ATUAL (total 5 lojas)
 const data2026 = [383139,345885,413975,396776,487656,516655,404024,396712,344746,392675,446107,1118569];
+
+// 2026 por loja — Jan–Abr REAIS, Mai–Dez = null (SURFERS ATUAL)
+const monthly2026 = {
+  delrey:   [134642,119759,128296,128061,null,null,null,null,null,null,null,null],
+  minas:    [90962, 65116, 90731, 68912, null,null,null,null,null,null,null,null],
+  contagem: [79523, 81210, 93198, 110985,null,null,null,null,null,null,null,null],
+  estacao:  [72779, 77070, 95819, 78318, null,null,null,null,null,null,null,null],
+  online:   [5233,  2730,  5931,  10500, null,null,null,null,null,null,null,null],
+};
+// Últimos 3 meses completos a partir de hoje (mai/2026): fev(1), mar(2), abr(3)
+const LAST3 = [1,2,3];
+const LAST3_LABELS = ['Fev 26/25','Mar 26/25','Abr 26/25'];
+const CURRENT_IDX = 4; // maio = em andamento
 
 const annualTotals = {};
 Object.keys(totalSurfers).forEach(y=>{
@@ -775,77 +788,91 @@ function updateMonthlyChart(){
 // POR LOJA — helpers
 // ═══════════════════════════════════════════
 function calcStoreMetrics(k){
-  const d24=monthly[k][2024];
   const d25=monthly[k][2025];
-  // YoY % para cada mês (2025 vs 2024)
-  const yoy=months.map((_,i)=>pctNum(d25[i],d24[i]));
-  // Últimos 3 meses: Out(9), Nov(10), Dez(11)
-  const last3=yoy.slice(9,12);
+  const d26=monthly2026[k];
+
+  // YoY % real: 2026 vs 2025 para meses com dados (Jan–Abr)
+  const yoyReal=d26.map((v,i)=>v!==null?pctNum(v,d25[i]):null);
+
+  // Últimos 3 meses completos (Fev=1, Mar=2, Abr=3) — base da projeção
+  const last3=LAST3.map(i=>yoyReal[i]);
   const avgDecline=last3.reduce((a,b)=>a+b,0)/3;
-  // Projeção 2026: aplicar avgDecline sobre cada mês de 2025
-  const proj2026=d25.map(v=>Math.round(v*(1+avgDecline/100)));
-  return {yoy,avgDecline,proj2026,last3};
+
+  // Projeção Mai–Dez: avgDecline sobre 2025
+  const proj2026=months.map((_,i)=>{
+    if(d26[i]!==null) return d26[i];           // dado real
+    if(i===CURRENT_IDX) return null;            // mês corrente — omitir
+    return Math.round(d25[i]*(1+avgDecline/100));
+  });
+
+  // % completa (real Jan–Abr + projetado Jun–Dez)
+  const yoyFull=proj2026.map((v,i)=>v!==null?pctNum(v,d25[i]):null);
+
+  return {yoyReal,yoyFull,avgDecline,proj2026,last3,d26};
 }
 
 let storeDetailChart=null;
 
 function showStoreDetail(k){
   const s=STORES[k];
-  const d24=monthly[k][2024];
   const d25=monthly[k][2025];
-  const {yoy,avgDecline,proj2026,last3}=calcStoreMetrics(k);
-  const total25=d25.reduce((a,b)=>a+b,0);
-  const total24=d24.reduce((a,b)=>a+b,0);
-  const projTotal=proj2026.reduce((a,b)=>a+b,0);
+  const {yoyReal,yoyFull,avgDecline,proj2026,last3,d26}=calcStoreMetrics(k);
 
-  // Header
+  // Soma apenas meses projetados (Jun–Dez) para "restante do ano"
+  const projRest=proj2026.slice(CURRENT_IDX+1).reduce((a,v)=>a+(v||0),0);
+  // Real acumulado Jan–Abr 2026
+  const realAcum=d26.slice(0,CURRENT_IDX).reduce((a,v)=>a+(v||0),0);
+  const proj2026Total=realAcum+projRest;
+  const total25=d25.reduce((a,b)=>a+b,0);
+  const pProj=pctNum(proj2026Total,total25);
+
   document.getElementById('storeDetailTitle').textContent=`Loja: ${s.name}`;
 
-  // Metrics badges
   const metricsEl=document.getElementById('storeDetailMetrics');
-  const pReal=pctNum(total25,total24);
-  const pProj=pctNum(projTotal,total25);
   metricsEl.innerHTML=`
     <div class="metric-badge">
-      <div class="mb-label">Total 2025</div>
-      <div class="mb-value">${fmtK(total25)}</div>
-      <div class="mb-sub" style="color:${pReal<0?'var(--down)':'var(--up)'}">
-        ${pReal>0?'+':''}${pReal.toFixed(1)}% vs 2024
-      </div>
+      <div class="mb-label">Acumulado Jan–Abr/26</div>
+      <div class="mb-value">${fmtK(realAcum)}</div>
+      <div class="mb-sub" style="color:var(--muted)">dados reais</div>
     </div>
     <div class="metric-badge" style="border-color:${avgDecline<-10?'var(--down)':'var(--border)'}">
       <div class="mb-label">Média queda · 3 últ. meses</div>
       <div class="mb-value" style="color:${avgDecline<0?'var(--down)':'var(--up)'}">
         ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%
       </div>
-      <div class="mb-sub">Out ${last3[0].toFixed(1)}% · Nov ${last3[1].toFixed(1)}% · Dez ${last3[2].toFixed(1)}%</div>
+      <div class="mb-sub">Fev ${last3[0].toFixed(1)}% · Mar ${last3[1].toFixed(1)}% · Abr ${last3[2].toFixed(1)}%</div>
     </div>
     <div class="metric-badge" style="border-color:#F59E0B55">
-      <div class="mb-label">Projeção 2026</div>
-      <div class="mb-value">${fmtK(projTotal)}</div>
+      <div class="mb-label">Projeção 2026 (ano)</div>
+      <div class="mb-value">${fmtK(proj2026Total)}</div>
       <div class="mb-sub" style="color:${pProj<0?'var(--down)':'var(--up)'}">
         ${pProj>0?'+':''}${pProj.toFixed(1)}% vs 2025
       </div>
     </div>`;
 
-  // Atualiza tabs ativas
+  // Tabs ativas
   document.querySelectorAll('.store-tab').forEach(btn=>{
-    const isActive=btn.dataset.store===k;
-    btn.classList.toggle('active',isActive);
-    btn.style.background=isActive?s.color:'transparent';
+    const active=btn.dataset.store===k;
+    btn.classList.toggle('active',active);
+    btn.style.background=active?s.color:'transparent';
     btn.style.borderColor=s.color;
-    btn.style.color=isActive?'#0F172A':s.color;
+    btn.style.color=active?'#0F172A':s.color;
   });
 
-  // Gráfico
-  if(storeDetailChart){storeDetailChart.destroy();}
+  if(storeDetailChart) storeDetailChart.destroy();
 
-  // Colore pontos da linha %: últimos 3 meses destacados
-  const pointColors=yoy.map((_,i)=>{
-    if(i>=9) return '#FBBF24'; // últimos 3 meses = âmbar
-    return yoy[i]>=0?'#4ADE80':'#F87171';
+  // Datasets separados: real Jan–Abr | projetado Jun–Dez | mai = corrente
+  const barReal  =months.map((_,i)=>i<CURRENT_IDX?d26[i]:null);
+  const barProj  =months.map((_,i)=>i>CURRENT_IDX?proj2026[i]:null);
+  // Linha % real (Jan–Abr) e projetado (Jun–Dez) — base = últimos 3M destacados
+  const lineReal =months.map((_,i)=>i<CURRENT_IDX?yoyReal[i]:null);
+  const lineProj =months.map((_,i)=>i>CURRENT_IDX?yoyFull[i]:null);
+
+  const realPtColor=months.map((_,i)=>{
+    if(LAST3.includes(i)) return '#FBBF24';       // base da projeção = âmbar
+    return (yoyReal[i]||0)>=0?'#4ADE80':'#F87171';
   });
-  const pointSizes=yoy.map((_,i)=>i>=9?6:3);
+  const realPtSize=months.map((_,i)=>LAST3.includes(i)?7:3);
 
   storeDetailChart=new Chart(document.getElementById('chartStoreDetail'),{
     type:'bar',
@@ -853,54 +880,32 @@ function showStoreDetail(k){
       labels:months,
       datasets:[
         {
-          type:'line',
-          label:'2024 (referência)',
-          data:d24,
-          borderColor:'#64748B',
-          borderDash:[5,3],
-          borderWidth:1.5,
-          fill:false,
-          yAxisID:'y',
-          pointRadius:0,
-          tension:.3,
-          order:0,
+          type:'line',label:'2025 (ref.)',data:d25,
+          borderColor:'#475569',borderDash:[5,3],borderWidth:1.5,
+          fill:false,yAxisID:'y',pointRadius:0,tension:.3,order:0,
         },
         {
-          type:'bar',
-          label:'2025 Real',
-          data:d25,
-          backgroundColor:s.color+'99',
-          borderColor:s.color,
-          borderWidth:1,
-          borderRadius:4,
-          yAxisID:'y',
-          order:2,
+          type:'bar',label:'2026 Real',data:barReal,
+          backgroundColor:s.color+'CC',borderColor:s.color,
+          borderWidth:1,borderRadius:4,yAxisID:'y',order:2,
         },
         {
-          type:'bar',
-          label:'2026 Projetado',
-          data:proj2026,
-          backgroundColor:'rgba(251,191,36,.25)',
-          borderColor:'#FBBF24',
-          borderWidth:2,
-          borderRadius:4,
-          yAxisID:'y',
-          order:3,
+          type:'bar',label:'2026 Projetado (Jun–Dez)',data:barProj,
+          backgroundColor:'rgba(251,191,36,.28)',borderColor:'#FBBF24',
+          borderWidth:2,borderRadius:4,yAxisID:'y',order:3,
         },
         {
-          type:'line',
-          label:'% vs ano anterior',
-          data:yoy,
-          borderColor:'#F87171',
-          backgroundColor:'transparent',
-          fill:false,
-          yAxisID:'y2',
-          pointRadius:pointSizes,
-          pointBackgroundColor:pointColors,
-          pointBorderColor:pointColors,
-          tension:.35,
-          borderWidth:1.5,
-          order:1,
+          type:'line',label:'% real (26/25)',data:lineReal,
+          borderColor:'#F87171',fill:false,yAxisID:'y2',
+          pointRadius:realPtSize,pointBackgroundColor:realPtColor,
+          pointBorderColor:realPtColor,tension:.35,borderWidth:2,order:1,
+          spanGaps:false,
+        },
+        {
+          type:'line',label:'% projetado',data:lineProj,
+          borderColor:'#FBBF24',borderDash:[4,3],fill:false,yAxisID:'y2',
+          pointRadius:3,pointBackgroundColor:'#FBBF24',
+          tension:.35,borderWidth:1.5,order:1,spanGaps:false,
         },
       ]
     },
@@ -908,24 +913,20 @@ function showStoreDetail(k){
       responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{labels:{color:'#94A3B8',boxWidth:10,boxHeight:10}},
+        legend:{labels:{color:'#94A3B8',boxWidth:10,boxHeight:10,font:{size:11}}},
         tooltip:{
           callbacks:{
             label:ctx=>{
               if(ctx.dataset.yAxisID==='y2')
-                return ` ${ctx.dataset.label}: ${ctx.parsed.y>0?'+':''}${ctx.parsed.y.toFixed(1)}%`;
-              return ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`;
+                return ` ${ctx.dataset.label}: ${ctx.parsed.y!=null?((ctx.parsed.y>0?'+':'')+ctx.parsed.y.toFixed(1)+'%'):'—'}`;
+              return ` ${ctx.dataset.label}: ${ctx.parsed.y!=null?fmt(ctx.parsed.y):'—'}`;
             }
           }
         }
       },
       scales:{
         x:{grid:gridOpts,ticks:tickOpts},
-        y:{
-          position:'left',
-          grid:gridOpts,
-          ticks:{...tickOpts,callback:v=>fmtK(v)},
-        },
+        y:{position:'left',grid:gridOpts,ticks:{...tickOpts,callback:v=>fmtK(v)}},
         y2:{
           position:'right',
           grid:{drawOnChartArea:false,color:'transparent'},
@@ -942,28 +943,29 @@ function showStoreDetail(k){
 function buildLojas(){
   const storeKeys=Object.keys(STORES);
 
-  // KPI cards com projeção
+  // KPI cards com projeção 2026
   const kpiGrid=document.getElementById('storeKpis');
   storeKeys.forEach(k=>{
     const s=STORES[k];
     const v25=monthly[k][2025].reduce((a,b)=>a+b,0);
-    const v24=monthly[k][2024].reduce((a,b)=>a+b,0);
-    const p=pctNum(v25,v24);
-    const {avgDecline,proj2026}=calcStoreMetrics(k);
-    const projTotal=proj2026.reduce((a,b)=>a+b,0);
-    const pProj=pctNum(projTotal,v25);
+    const {avgDecline,proj2026,d26}=calcStoreMetrics(k);
+    const realAcum=d26.slice(0,CURRENT_IDX).reduce((a,v)=>a+(v||0),0);
+    const projRest=proj2026.slice(CURRENT_IDX+1).reduce((a,v)=>a+(v||0),0);
+    const proj2026Total=realAcum+projRest;
+    const pProj=pctNum(proj2026Total,v25);
     const card=document.createElement('div');
     card.className='kpi-card';
     card.style.cursor='pointer';
     card.innerHTML=`
       <div class="label" style="color:${s.color}">${s.name}</div>
       <div class="value">${fmtK(v25)}</div>
-      <div class="delta ${p>=0?'up':'down'}">${p>0?'+':''}${p.toFixed(1)}% vs 2024</div>
+      <div class="delta neutral" style="color:#94A3B8;font-size:.7rem">Total 2025</div>
       <div style="font-size:.7rem;margin-top:.4rem;color:#94A3B8;border-top:1px solid var(--border);padding-top:.4rem">
         Proj. 2026: <strong style="color:${pProj<0?'var(--down)':'var(--up)'}">
-          ${pProj>0?'+':''}${pProj.toFixed(1)}%
-        </strong> · média 3M: <strong style="color:${avgDecline<0?'var(--down)':'var(--up)'}">
-          ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%/mês
+          ${fmtK(proj2026Total)}
+        </strong><br>
+        Média 3M (Fev–Abr/26): <strong style="color:${avgDecline<0?'var(--down)':'var(--up)'}">
+          ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%
         </strong>
       </div>`;
     card.onclick=()=>{
@@ -991,73 +993,95 @@ function buildLojas(){
   // Mostra Del Rey por padrão
   showStoreDetail('delrey');
 
-  // YoY % todas as lojas — gráfico de linhas
+  // YoY % todas as lojas — 2026 vs 2025 (real Jan–Abr + projetado Jun–Dez)
   new Chart(document.getElementById('chartYoYAllStores'),{
     type:'line',
     data:{
       labels:months,
-      datasets:storeKeys.map(k=>({
-        label:STORES[k].name,
-        data:calcStoreMetrics(k).yoy,
-        borderColor:STORES[k].color,
-        backgroundColor:'transparent',
-        fill:false,
-        tension:.35,
-        pointRadius:3,
-        pointHoverRadius:6,
-      }))
+      datasets:storeKeys.flatMap(k=>{
+        const {yoyReal,yoyFull}=calcStoreMetrics(k);
+        const c=STORES[k].color;
+        const lineReal=months.map((_,i)=>i<CURRENT_IDX?yoyReal[i]:null);
+        const lineProj=months.map((_,i)=>i>CURRENT_IDX?yoyFull[i]:null);
+        return [
+          {
+            label:STORES[k].name+' (real)',
+            data:lineReal,
+            borderColor:c,backgroundColor:'transparent',
+            fill:false,tension:.35,
+            pointRadius:months.map((_,i)=>LAST3.includes(i)?6:3),
+            pointBackgroundColor:months.map((_,i)=>LAST3.includes(i)?'#FBBF24':c),
+            borderWidth:2,spanGaps:false,
+          },
+          {
+            label:STORES[k].name+' (proj.)',
+            data:lineProj,
+            borderColor:c,borderDash:[4,3],backgroundColor:'transparent',
+            fill:false,tension:.35,
+            pointRadius:2,pointBackgroundColor:c,
+            borderWidth:1.5,spanGaps:false,
+          },
+        ];
+      })
     },
     options:{
       responsive:true,maintainAspectRatio:false,
       interaction:{mode:'index',intersect:false},
       plugins:{
-        legend:{labels:{color:'#94A3B8',boxWidth:10,boxHeight:10}},
+        legend:{
+          labels:{
+            color:'#94A3B8',boxWidth:8,boxHeight:8,font:{size:10},
+            filter:item=>!item.text.includes('(proj.)'), // esconde proj. na legenda
+          }
+        },
         tooltip:{
           callbacks:{
-            label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y>0?'+':''}${ctx.parsed.y.toFixed(1)}%`
+            label:ctx=>ctx.parsed.y!=null
+              ?` ${ctx.dataset.label}: ${ctx.parsed.y>0?'+':''}${ctx.parsed.y.toFixed(1)}%`
+              :null
           }
         }
       },
       scales:{
         x:{grid:gridOpts,ticks:tickOpts},
-        y:{
-          grid:gridOpts,
-          ticks:{...tickOpts,callback:v=>`${v>0?'+':''}${v.toFixed(0)}%`},
-        }
+        y:{grid:gridOpts,ticks:{...tickOpts,callback:v=>`${v>0?'+':''}${v.toFixed(0)}%`}}
       }
     }
   });
 
-  // Tabela de projeção
+  // Tabela de projeção — base: Fev, Mar, Abr 2026 vs 2025
   const projTbl=document.getElementById('projTable');
   let html=`<thead><tr>
     <th>Loja</th>
     <th>Total 2025</th>
-    <th>Δ Out 25/24</th>
-    <th>Δ Nov 25/24</th>
-    <th>Δ Dez 25/24</th>
-    <th style="background:rgba(251,191,36,.12)">Média 3M</th>
-    <th style="background:rgba(251,191,36,.12)">Proj. 2026</th>
+    <th>Real Jan–Abr/26</th>
+    <th title="Fev 2026 vs Fev 2025">Δ Fev 26/25</th>
+    <th title="Mar 2026 vs Mar 2025">Δ Mar 26/25</th>
+    <th title="Abr 2026 vs Abr 2025">Δ Abr 26/25</th>
+    <th style="background:rgba(251,191,36,.12)" title="Média dos 3 últimos meses completos">Média 3M</th>
+    <th style="background:rgba(251,191,36,.12)">Proj. 2026 (ano)</th>
     <th style="background:rgba(251,191,36,.12)">Δ vs 2025</th>
   </tr></thead><tbody>`;
 
   let sumT25=0,sumProj=0;
   storeKeys.forEach(k=>{
     const s=STORES[k];
-    const d24=monthly[k][2024];
     const d25=monthly[k][2025];
     const t25=d25.reduce((a,b)=>a+b,0);
-    const {avgDecline,proj2026,yoy}=calcStoreMetrics(k);
-    const tProj=proj2026.reduce((a,b)=>a+b,0);
+    const {avgDecline,proj2026,yoyReal,d26}=calcStoreMetrics(k);
+    const realAcum=d26.slice(0,CURRENT_IDX).reduce((a,v)=>a+(v||0),0);
+    const projRest=proj2026.slice(CURRENT_IDX+1).reduce((a,v)=>a+(v||0),0);
+    const tProj=realAcum+projRest;
     const pProj=pctNum(tProj,t25);
-    const oct=yoy[9],nov=yoy[10],dec=yoy[11];
+    const [,feb,mar,abr]=yoyReal; // índices 1,2,3
     sumT25+=t25; sumProj+=tProj;
     html+=`<tr>
       <td style="color:${s.color}">${s.name}</td>
       <td>${fmt(t25)}</td>
-      <td class="pct ${oct>=0?'pos':'neg'}">${oct>0?'+':''}${oct.toFixed(1)}%</td>
-      <td class="pct ${nov>=0?'pos':'neg'}">${nov>0?'+':''}${nov.toFixed(1)}%</td>
-      <td class="pct ${dec>=0?'pos':'neg'}">${dec>0?'+':''}${dec.toFixed(1)}%</td>
+      <td>${fmt(realAcum)}</td>
+      <td class="pct ${feb>=0?'pos':'neg'}">${feb>0?'+':''}${feb.toFixed(1)}%</td>
+      <td class="pct ${mar>=0?'pos':'neg'}">${mar>0?'+':''}${mar.toFixed(1)}%</td>
+      <td class="pct ${abr>=0?'pos':'neg'}">${abr>0?'+':''}${abr.toFixed(1)}%</td>
       <td class="pct ${avgDecline>=0?'pos':'neg'}" style="font-weight:700;background:rgba(251,191,36,.05)">
         ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%
       </td>
@@ -1071,7 +1095,7 @@ function buildLojas(){
   html+=`</tbody><tfoot><tr class="total-row">
     <td>TOTAL SURFERS</td>
     <td>${fmt(sumT25)}</td>
-    <td colspan="3"></td>
+    <td colspan="4"></td>
     <td style="background:rgba(251,191,36,.1)">—</td>
     <td style="background:rgba(251,191,36,.1)">${fmt(sumProj)}</td>
     <td class="pct ${pTotal>=0?'pos':'neg'}" style="background:rgba(251,191,36,.1)">
