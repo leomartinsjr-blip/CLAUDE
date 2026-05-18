@@ -1,0 +1,17 @@
+{
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "if ((git -C \"C:\\Users\\Leonardo\\Desktop\\CLAUDE\" status --porcelain) -ne $null) { git -C \"C:\\Users\\Leonardo\\Desktop\\CLAUDE\" add -A; git -C \"C:\\Users\\Leonardo\\Desktop\\CLAUDE\" commit -m ('chore: auto-sync ' + (Get-Date -Format 'yyyy-MM-dd HH:mm')); git -C \"C:\\Users\\Leonardo\\Desktop\\CLAUDE\" push } ",
+            "shell": "powershell",
+            "timeout": 30,
+            "statusMessage": "Sincronizando com GitHub..."
+          }
+        ]
+      }
+    ]
+  }
+}
