@@ -82,6 +82,15 @@ main{padding:1.5rem 2rem;max-width:1600px;margin:0 auto}
 .store-filter{display:flex;flex-wrap:wrap;gap:.5rem;margin-bottom:1rem}
 .store-btn{padding:.3rem .7rem;border-radius:.375rem;border:2px solid;background:transparent;cursor:pointer;font-size:.75rem;font-weight:600;transition:all .15s;color:var(--text)}
 .store-btn.off{opacity:.3}
+/* STORE DETAIL TABS */
+.store-tab{padding:.375rem .875rem;border-radius:.5rem;border:2px solid;background:transparent;cursor:pointer;font-size:.8rem;font-weight:600;transition:all .2s;color:var(--muted)}
+.store-tab:hover{opacity:.85}
+.store-tab.active{color:#0F172A!important}
+/* METRIC BADGE */
+.metric-badge{background:var(--surface2);border:1px solid var(--border);border-radius:.5rem;padding:.5rem .875rem;text-align:center;min-width:130px}
+.metric-badge .mb-label{font-size:.65rem;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:.2rem}
+.metric-badge .mb-value{font-size:1.1rem;font-weight:700}
+.metric-badge .mb-sub{font-size:.65rem;color:var(--muted);margin-top:.15rem}
 
 /* RESPONSIVE */
 @media(max-width:900px){
@@ -223,27 +232,42 @@ main{padding:1.5rem 2rem;max-width:1600px;margin:0 auto}
   <div class="section-header">
     <div class="section-title">Performance por Loja</div>
   </div>
+
+  <!-- KPI resumo -->
   <div class="kpi-grid" id="storeKpis"></div>
+
+  <!-- Seletor de loja -->
+  <div style="display:flex;gap:.5rem;margin-bottom:1rem;flex-wrap:wrap" id="storeTabs"></div>
+
+  <!-- Detalhe por loja: barras + projeção + % -->
   <div class="chart-card full">
-    <div class="chart-title">Receita por Loja — 2022 a 2025</div>
-    <div class="chart-subtitle">Comparativo anual agrupado</div>
-    <div class="chart-wrap" style="height:340px">
-      <canvas id="chartStoreGroup"></canvas>
+    <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:.75rem;margin-bottom:1rem">
+      <div>
+        <div class="chart-title" id="storeDetailTitle">—</div>
+        <div class="chart-subtitle">Barras: 2024 vs 2025 (real) vs 2026 (projetado) · Linha: variação % vs ano anterior</div>
+      </div>
+      <div style="display:flex;gap:.75rem;flex-wrap:wrap" id="storeDetailMetrics"></div>
+    </div>
+    <div class="chart-wrap" style="height:350px">
+      <canvas id="chartStoreDetail"></canvas>
     </div>
   </div>
-  <div class="chart-grid-equal" style="margin-top:1rem">
-    <div class="chart-card">
-      <div class="chart-title">Evolução Mensal — Del Rey &amp; Minas</div>
-      <div class="chart-wrap" style="height:250px">
-        <canvas id="chartStore1"></canvas>
-      </div>
+
+  <!-- Variação % mensal — todas as lojas -->
+  <div class="chart-card full" style="margin-top:1rem">
+    <div class="chart-title">Variação % Mensal por Loja — 2025 vs 2024</div>
+    <div class="chart-subtitle">Comparativo mês a mês de queda ou crescimento em relação ao mesmo mês do ano anterior</div>
+    <div class="chart-wrap" style="height:300px">
+      <canvas id="chartYoYAllStores"></canvas>
     </div>
-    <div class="chart-card">
-      <div class="chart-title">Evolução Mensal — Contagem &amp; Estação</div>
-      <div class="chart-wrap" style="height:250px">
-        <canvas id="chartStore2"></canvas>
-      </div>
-    </div>
+  </div>
+
+  <!-- Tabela projeção -->
+  <div class="chart-card full" style="margin-top:1rem;overflow-x:auto">
+    <div class="chart-title">Projeção 2026 por Loja</div>
+    <div class="chart-subtitle">Média dos últimos 3 meses (Out–Dez 2025 vs 2024) aplicada sobre cada mês de 2025</div>
+    <div style="height:.75rem"></div>
+    <table class="data-table" id="projTable"></table>
   </div>
 </div>
 
@@ -748,99 +772,313 @@ function updateMonthlyChart(){
 }
 
 // ═══════════════════════════════════════════
-// POR LOJA
+// POR LOJA — helpers
+// ═══════════════════════════════════════════
+function calcStoreMetrics(k){
+  const d24=monthly[k][2024];
+  const d25=monthly[k][2025];
+  // YoY % para cada mês (2025 vs 2024)
+  const yoy=months.map((_,i)=>pctNum(d25[i],d24[i]));
+  // Últimos 3 meses: Out(9), Nov(10), Dez(11)
+  const last3=yoy.slice(9,12);
+  const avgDecline=last3.reduce((a,b)=>a+b,0)/3;
+  // Projeção 2026: aplicar avgDecline sobre cada mês de 2025
+  const proj2026=d25.map(v=>Math.round(v*(1+avgDecline/100)));
+  return {yoy,avgDecline,proj2026,last3};
+}
+
+let storeDetailChart=null;
+
+function showStoreDetail(k){
+  const s=STORES[k];
+  const d24=monthly[k][2024];
+  const d25=monthly[k][2025];
+  const {yoy,avgDecline,proj2026,last3}=calcStoreMetrics(k);
+  const total25=d25.reduce((a,b)=>a+b,0);
+  const total24=d24.reduce((a,b)=>a+b,0);
+  const projTotal=proj2026.reduce((a,b)=>a+b,0);
+
+  // Header
+  document.getElementById('storeDetailTitle').textContent=`Loja: ${s.name}`;
+
+  // Metrics badges
+  const metricsEl=document.getElementById('storeDetailMetrics');
+  const pReal=pctNum(total25,total24);
+  const pProj=pctNum(projTotal,total25);
+  metricsEl.innerHTML=`
+    <div class="metric-badge">
+      <div class="mb-label">Total 2025</div>
+      <div class="mb-value">${fmtK(total25)}</div>
+      <div class="mb-sub" style="color:${pReal<0?'var(--down)':'var(--up)'}">
+        ${pReal>0?'+':''}${pReal.toFixed(1)}% vs 2024
+      </div>
+    </div>
+    <div class="metric-badge" style="border-color:${avgDecline<-10?'var(--down)':'var(--border)'}">
+      <div class="mb-label">Média queda · 3 últ. meses</div>
+      <div class="mb-value" style="color:${avgDecline<0?'var(--down)':'var(--up)'}">
+        ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%
+      </div>
+      <div class="mb-sub">Out ${last3[0].toFixed(1)}% · Nov ${last3[1].toFixed(1)}% · Dez ${last3[2].toFixed(1)}%</div>
+    </div>
+    <div class="metric-badge" style="border-color:#F59E0B55">
+      <div class="mb-label">Projeção 2026</div>
+      <div class="mb-value">${fmtK(projTotal)}</div>
+      <div class="mb-sub" style="color:${pProj<0?'var(--down)':'var(--up)'}">
+        ${pProj>0?'+':''}${pProj.toFixed(1)}% vs 2025
+      </div>
+    </div>`;
+
+  // Atualiza tabs ativas
+  document.querySelectorAll('.store-tab').forEach(btn=>{
+    const isActive=btn.dataset.store===k;
+    btn.classList.toggle('active',isActive);
+    btn.style.background=isActive?s.color:'transparent';
+    btn.style.borderColor=s.color;
+    btn.style.color=isActive?'#0F172A':s.color;
+  });
+
+  // Gráfico
+  if(storeDetailChart){storeDetailChart.destroy();}
+
+  // Colore pontos da linha %: últimos 3 meses destacados
+  const pointColors=yoy.map((_,i)=>{
+    if(i>=9) return '#FBBF24'; // últimos 3 meses = âmbar
+    return yoy[i]>=0?'#4ADE80':'#F87171';
+  });
+  const pointSizes=yoy.map((_,i)=>i>=9?6:3);
+
+  storeDetailChart=new Chart(document.getElementById('chartStoreDetail'),{
+    type:'bar',
+    data:{
+      labels:months,
+      datasets:[
+        {
+          type:'line',
+          label:'2024 (referência)',
+          data:d24,
+          borderColor:'#64748B',
+          borderDash:[5,3],
+          borderWidth:1.5,
+          fill:false,
+          yAxisID:'y',
+          pointRadius:0,
+          tension:.3,
+          order:0,
+        },
+        {
+          type:'bar',
+          label:'2025 Real',
+          data:d25,
+          backgroundColor:s.color+'99',
+          borderColor:s.color,
+          borderWidth:1,
+          borderRadius:4,
+          yAxisID:'y',
+          order:2,
+        },
+        {
+          type:'bar',
+          label:'2026 Projetado',
+          data:proj2026,
+          backgroundColor:'rgba(251,191,36,.25)',
+          borderColor:'#FBBF24',
+          borderWidth:2,
+          borderRadius:4,
+          yAxisID:'y',
+          order:3,
+        },
+        {
+          type:'line',
+          label:'% vs ano anterior',
+          data:yoy,
+          borderColor:'#F87171',
+          backgroundColor:'transparent',
+          fill:false,
+          yAxisID:'y2',
+          pointRadius:pointSizes,
+          pointBackgroundColor:pointColors,
+          pointBorderColor:pointColors,
+          tension:.35,
+          borderWidth:1.5,
+          order:1,
+        },
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
+      plugins:{
+        legend:{labels:{color:'#94A3B8',boxWidth:10,boxHeight:10}},
+        tooltip:{
+          callbacks:{
+            label:ctx=>{
+              if(ctx.dataset.yAxisID==='y2')
+                return ` ${ctx.dataset.label}: ${ctx.parsed.y>0?'+':''}${ctx.parsed.y.toFixed(1)}%`;
+              return ` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`;
+            }
+          }
+        }
+      },
+      scales:{
+        x:{grid:gridOpts,ticks:tickOpts},
+        y:{
+          position:'left',
+          grid:gridOpts,
+          ticks:{...tickOpts,callback:v=>fmtK(v)},
+        },
+        y2:{
+          position:'right',
+          grid:{drawOnChartArea:false,color:'transparent'},
+          ticks:{...tickOpts,callback:v=>`${v>0?'+':''}${v.toFixed(0)}%`},
+        }
+      }
+    }
+  });
+}
+
+// ═══════════════════════════════════════════
+// POR LOJA — build
 // ═══════════════════════════════════════════
 function buildLojas(){
-  const years=[2022,2023,2024,2025];
   const storeKeys=Object.keys(STORES);
 
-  // KPI cards per store
+  // KPI cards com projeção
   const kpiGrid=document.getElementById('storeKpis');
   storeKeys.forEach(k=>{
     const s=STORES[k];
     const v25=monthly[k][2025].reduce((a,b)=>a+b,0);
     const v24=monthly[k][2024].reduce((a,b)=>a+b,0);
     const p=pctNum(v25,v24);
+    const {avgDecline,proj2026}=calcStoreMetrics(k);
+    const projTotal=proj2026.reduce((a,b)=>a+b,0);
+    const pProj=pctNum(projTotal,v25);
     const card=document.createElement('div');
     card.className='kpi-card';
+    card.style.cursor='pointer';
     card.innerHTML=`
       <div class="label" style="color:${s.color}">${s.name}</div>
       <div class="value">${fmtK(v25)}</div>
-      <div class="delta ${p>=0?'up':'down'}">${p>0?'+':''}${p.toFixed(1)}% vs 2024</div>`;
+      <div class="delta ${p>=0?'up':'down'}">${p>0?'+':''}${p.toFixed(1)}% vs 2024</div>
+      <div style="font-size:.7rem;margin-top:.4rem;color:#94A3B8;border-top:1px solid var(--border);padding-top:.4rem">
+        Proj. 2026: <strong style="color:${pProj<0?'var(--down)':'var(--up)'}">
+          ${pProj>0?'+':''}${pProj.toFixed(1)}%
+        </strong> · média 3M: <strong style="color:${avgDecline<0?'var(--down)':'var(--up)'}">
+          ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%/mês
+        </strong>
+      </div>`;
+    card.onclick=()=>{
+      setTab('lojas');
+      showStoreDetail(k);
+      document.getElementById('storeTabs').scrollIntoView({behavior:'smooth',block:'nearest'});
+    };
     kpiGrid.appendChild(card);
   });
 
-  // Grouped bar by store
-  const groupColors=['#FBBF24','#F97316','#60A5FA','#38BDF8'];
-  new Chart(document.getElementById('chartStoreGroup'),{
-    type:'bar',
+  // Store tabs
+  const tabsEl=document.getElementById('storeTabs');
+  storeKeys.forEach(k=>{
+    const s=STORES[k];
+    const btn=document.createElement('button');
+    btn.className='store-tab';
+    btn.dataset.store=k;
+    btn.textContent=s.name;
+    btn.style.borderColor=s.color;
+    btn.style.color=s.color;
+    btn.onclick=()=>showStoreDetail(k);
+    tabsEl.appendChild(btn);
+  });
+
+  // Mostra Del Rey por padrão
+  showStoreDetail('delrey');
+
+  // YoY % todas as lojas — gráfico de linhas
+  new Chart(document.getElementById('chartYoYAllStores'),{
+    type:'line',
     data:{
-      labels:storeKeys.map(k=>STORES[k].name),
-      datasets:years.map((y,i)=>({
-        label:String(y),
-        data:storeKeys.map(k=>monthly[k][y].reduce((a,b)=>a+b,0)),
-        backgroundColor:groupColors[i]+'99',
-        borderColor:groupColors[i],
-        borderWidth:1,
-        borderRadius:3,
+      labels:months,
+      datasets:storeKeys.map(k=>({
+        label:STORES[k].name,
+        data:calcStoreMetrics(k).yoy,
+        borderColor:STORES[k].color,
+        backgroundColor:'transparent',
+        fill:false,
+        tension:.35,
+        pointRadius:3,
+        pointHoverRadius:6,
       }))
     },
     options:{
       responsive:true,maintainAspectRatio:false,
+      interaction:{mode:'index',intersect:false},
       plugins:{
         legend:{labels:{color:'#94A3B8',boxWidth:10,boxHeight:10}},
-        tooltip:{callbacks:{label:ctx=>` ${ctx.dataset.label}: ${fmt(ctx.parsed.y)}`}}
+        tooltip:{
+          callbacks:{
+            label:ctx=>` ${ctx.dataset.label}: ${ctx.parsed.y>0?'+':''}${ctx.parsed.y.toFixed(1)}%`
+          }
+        }
       },
       scales:{
         x:{grid:gridOpts,ticks:tickOpts},
-        y:{grid:gridOpts,ticks:{...tickOpts,callback:v=>fmtK(v)}}
+        y:{
+          grid:gridOpts,
+          ticks:{...tickOpts,callback:v=>`${v>0?'+':''}${v.toFixed(0)}%`},
+        }
       }
     }
   });
 
-  // Monthly 2025 – Del Rey & Minas
-  new Chart(document.getElementById('chartStore1'),{
-    type:'line',
-    data:{
-      labels:months,
-      datasets:[
-        {label:'Del Rey 2025',data:monthly.delrey[2025],borderColor:'#60A5FA',backgroundColor:'#60A5FA22',fill:true,tension:.3,pointRadius:2},
-        {label:'Del Rey 2024',data:monthly.delrey[2024],borderColor:'#60A5FA55',borderDash:[4,4],fill:false,tension:.3,pointRadius:0},
-        {label:'Minas 2025',data:monthly.minas[2025],borderColor:'#34D399',backgroundColor:'#34D39922',fill:true,tension:.3,pointRadius:2},
-        {label:'Minas 2024',data:monthly.minas[2024],borderColor:'#34D39955',borderDash:[4,4],fill:false,tension:.3,pointRadius:0},
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#94A3B8',boxWidth:8,boxHeight:8,font:{size:10}}}},
-      scales:{
-        x:{grid:gridOpts,ticks:tickOpts},
-        y:{grid:gridOpts,ticks:{...tickOpts,callback:v=>fmtK(v)}}
-      }
-    }
-  });
+  // Tabela de projeção
+  const projTbl=document.getElementById('projTable');
+  let html=`<thead><tr>
+    <th>Loja</th>
+    <th>Total 2025</th>
+    <th>Δ Out 25/24</th>
+    <th>Δ Nov 25/24</th>
+    <th>Δ Dez 25/24</th>
+    <th style="background:rgba(251,191,36,.12)">Média 3M</th>
+    <th style="background:rgba(251,191,36,.12)">Proj. 2026</th>
+    <th style="background:rgba(251,191,36,.12)">Δ vs 2025</th>
+  </tr></thead><tbody>`;
 
-  // Monthly 2025 – Contagem & Estação
-  new Chart(document.getElementById('chartStore2'),{
-    type:'line',
-    data:{
-      labels:months,
-      datasets:[
-        {label:'Contagem 2025',data:monthly.contagem[2025],borderColor:'#FBBF24',backgroundColor:'#FBBF2422',fill:true,tension:.3,pointRadius:2},
-        {label:'Contagem 2024',data:monthly.contagem[2024],borderColor:'#FBBF2455',borderDash:[4,4],fill:false,tension:.3,pointRadius:0},
-        {label:'Estação 2025',data:monthly.estacao[2025],borderColor:'#F87171',backgroundColor:'#F8717122',fill:true,tension:.3,pointRadius:2},
-        {label:'Estação 2024',data:monthly.estacao[2024],borderColor:'#F8717155',borderDash:[4,4],fill:false,tension:.3,pointRadius:0},
-      ]
-    },
-    options:{
-      responsive:true,maintainAspectRatio:false,
-      plugins:{legend:{labels:{color:'#94A3B8',boxWidth:8,boxHeight:8,font:{size:10}}}},
-      scales:{
-        x:{grid:gridOpts,ticks:tickOpts},
-        y:{grid:gridOpts,ticks:{...tickOpts,callback:v=>fmtK(v)}}
-      }
-    }
+  let sumT25=0,sumProj=0;
+  storeKeys.forEach(k=>{
+    const s=STORES[k];
+    const d24=monthly[k][2024];
+    const d25=monthly[k][2025];
+    const t25=d25.reduce((a,b)=>a+b,0);
+    const {avgDecline,proj2026,yoy}=calcStoreMetrics(k);
+    const tProj=proj2026.reduce((a,b)=>a+b,0);
+    const pProj=pctNum(tProj,t25);
+    const oct=yoy[9],nov=yoy[10],dec=yoy[11];
+    sumT25+=t25; sumProj+=tProj;
+    html+=`<tr>
+      <td style="color:${s.color}">${s.name}</td>
+      <td>${fmt(t25)}</td>
+      <td class="pct ${oct>=0?'pos':'neg'}">${oct>0?'+':''}${oct.toFixed(1)}%</td>
+      <td class="pct ${nov>=0?'pos':'neg'}">${nov>0?'+':''}${nov.toFixed(1)}%</td>
+      <td class="pct ${dec>=0?'pos':'neg'}">${dec>0?'+':''}${dec.toFixed(1)}%</td>
+      <td class="pct ${avgDecline>=0?'pos':'neg'}" style="font-weight:700;background:rgba(251,191,36,.05)">
+        ${avgDecline>0?'+':''}${avgDecline.toFixed(1)}%
+      </td>
+      <td style="background:rgba(251,191,36,.05)">${fmt(tProj)}</td>
+      <td class="pct ${pProj>=0?'pos':'neg'}" style="background:rgba(251,191,36,.05)">
+        ${pProj>0?'+':''}${pProj.toFixed(1)}%
+      </td>
+    </tr>`;
   });
+  const pTotal=pctNum(sumProj,sumT25);
+  html+=`</tbody><tfoot><tr class="total-row">
+    <td>TOTAL SURFERS</td>
+    <td>${fmt(sumT25)}</td>
+    <td colspan="3"></td>
+    <td style="background:rgba(251,191,36,.1)">—</td>
+    <td style="background:rgba(251,191,36,.1)">${fmt(sumProj)}</td>
+    <td class="pct ${pTotal>=0?'pos':'neg'}" style="background:rgba(251,191,36,.1)">
+      ${pTotal>0?'+':''}${pTotal.toFixed(1)}%
+    </td>
+  </tr></tfoot>`;
+  projTbl.innerHTML=html;
 }
 
 // ═══════════════════════════════════════════
