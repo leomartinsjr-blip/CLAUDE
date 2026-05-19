@@ -2,7 +2,9 @@
   "permissions": {
     "allow": [
       "Bash(git config *)",
-      "Bash(node *)"
+      "Bash(node *)",
+      "Bash(start \"\" \"http://localhost:3000\")",
+      "Bash(explorer \"http://localhost:3000\")"
     ]
   }
 }
