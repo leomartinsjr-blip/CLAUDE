@@ -8,7 +8,11 @@
       "Bash(start *)",
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/)",
       "Bash(curl -s -X POST http://localhost:3000/api/login -H 'Content-Type: application/json' -c /tmp/cookies.txt -d '{\"username\":\"leonardo\",\"password\":\"admin123\"}')",
-      "Bash(python3 -c \"import sys,json; u=json.load\\(sys.stdin\\); print\\([\\(x['username'],x['password'][:20]\\) for x in u[:3]]\\)\")"
+      "Bash(python3 -c \"import sys,json; u=json.load\\(sys.stdin\\); print\\([\\(x['username'],x['password'][:20]\\) for x in u[:3]]\\)\")",
+      "Bash(curl -s -X POST http://localhost:3000/api/login -H 'Content-Type: application/json' -c /tmp/cookies.txt -d '{\"username\":\"leonardo\",\"password\":\"leo123\"}')",
+      "Bash(curl -s -b /tmp/cookies.txt http://localhost:3000/api/weights/2026/6)",
+      "Bash(curl *)",
+      "Bash(python3 -c \"import sys,json; w=json.load\\(sys.stdin\\); print\\('Dias:', len\\(w\\), '| Soma:', round\\(sum\\(w.values\\(\\)\\),1\\)\\)\")"
     ]
   }
 }
