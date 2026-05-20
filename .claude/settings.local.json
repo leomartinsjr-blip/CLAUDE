@@ -48,7 +48,8 @@
       "Bash(git commit -m 'fix: show total projection in weekly meta card and modal *)",
       "Bash(git commit *)",
       "PowerShell(code C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas)",
-      "PowerShell(git *)"
+      "PowerShell(git *)",
+      "PowerShell(Start-Process \"http://localhost:3000\")"
     ]
   }
 }
