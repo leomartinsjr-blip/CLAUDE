@@ -46,7 +46,9 @@
       "Bash(git commit -m 'fix: correct connect-mongo v6 import syntax *)",
       "Bash(git commit -m 'fix: add TLS options to MongoDB client for Node.js 24 compatibility *)",
       "Bash(git commit -m 'fix: show total projection in weekly meta card and modal *)",
-      "Bash(git commit *)"
+      "Bash(git commit *)",
+      "PowerShell(code C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas)",
+      "PowerShell(git *)"
     ]
   }
 }
