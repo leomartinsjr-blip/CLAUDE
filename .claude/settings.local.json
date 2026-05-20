@@ -43,7 +43,8 @@
       "Bash(powershell *)",
       "Bash(python3 -c \"import json,sys; u=json.load\\(sys.stdin\\); print\\(list\\(u.keys\\(\\)\\)[:3]\\)\")",
       "Bash(git commit -m 'fix: remove Sunday closed indicator from caixa card *)",
-      "Bash(git commit -m 'fix: correct connect-mongo v6 import syntax *)"
+      "Bash(git commit -m 'fix: correct connect-mongo v6 import syntax *)",
+      "Bash(git commit -m 'fix: add TLS options to MongoDB client for Node.js 24 compatibility *)"
     ]
   }
 }
