@@ -28,7 +28,8 @@
       "Bash(git commit -m ' *)",
       "Bash(awk '{print $5}')",
       "Bash(pkill -f \"node server.js\")",
-      "Read(//mnt/c/Users/Leonardo/Desktop/**)"
+      "Read(//mnt/c/Users/Leonardo/Desktop/**)",
+      "Bash(taskkill //F //PID 11912)"
     ]
   }
 }
