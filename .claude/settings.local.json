@@ -14,7 +14,12 @@
       "Bash(curl *)",
       "Bash(python3 -c \"import sys,json; w=json.load\\(sys.stdin\\); print\\('Dias:', len\\(w\\), '| Soma:', round\\(sum\\(w.values\\(\\)\\),1\\)\\)\")",
       "Bash(netstat -ano)",
-      "Bash(findstr \":3000\")"
+      "Bash(findstr \":3000\")",
+      "Read(//c/Users/Leonardo/Desktop/**)",
+      "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\")",
+      "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" /b /a-d)",
+      "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" /b /ad)",
+      "Bash(findstr /v node_modules)"
     ]
   }
 }
