@@ -20,7 +20,12 @@
       "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" /b /a-d)",
       "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" /b /ad)",
       "Bash(findstr /v node_modules)",
-      "Bash(Start-Process *)"
+      "Bash(Start-Process *)",
+      "Bash(Get-Process -Name node -ErrorAction SilentlyContinue)",
+      "Bash(Select-Object Id, CPU, WorkingSet)",
+      "PowerShell(Get-Process *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)"
     ]
   }
 }
