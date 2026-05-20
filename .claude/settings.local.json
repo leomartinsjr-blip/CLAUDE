@@ -50,7 +50,15 @@
       "PowerShell(code C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas)",
       "PowerShell(git *)",
       "PowerShell(Start-Process \"http://localhost:3000\")",
-      "PowerShell(Get-ChildItem C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\ | Where-Object { -not $_.PSIsContainer } | Select-Object Name)"
+      "PowerShell(Get-ChildItem C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\ | Where-Object { -not $_.PSIsContainer } | Select-Object Name)",
+      "WebSearch",
+      "WebFetch(domain:webapi.microvix.com.br)",
+      "WebFetch(domain:developers.linkapi.solutions)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:share.linx.com.br)",
+      "WebFetch(domain:developer.api-integracao.microvix.com.br)",
+      "WebFetch(domain:developers.dito.com.br)"
     ]
   }
 }
