@@ -39,7 +39,9 @@
       "Bash(Start-Sleep -Seconds 2)",
       "Bash(Get-Content \"C:\\\\Users\\\\Leonardo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Leonardo-Desktop-CLAUDE\\\\f96d4841-4b15-4081-bcfc-566ef5df949c\\\\tasks\\\\bnjti0r0c.output\")",
       "PowerShell(Stop-Process *)",
-      "Bash(npm install *)"
+      "Bash(npm install *)",
+      "Bash(powershell *)",
+      "Bash(python3 -c \"import json,sys; u=json.load\\(sys.stdin\\); print\\(list\\(u.keys\\(\\)\\)[:3]\\)\")"
     ]
   }
 }
