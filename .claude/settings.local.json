@@ -58,7 +58,9 @@
       "WebFetch(domain:raw.githubusercontent.com)",
       "WebFetch(domain:share.linx.com.br)",
       "WebFetch(domain:developer.api-integracao.microvix.com.br)",
-      "WebFetch(domain:developers.dito.com.br)"
+      "WebFetch(domain:developers.dito.com.br)",
+      "Bash(Start-Sleep -Seconds 3)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Leonardo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Leonardo-Desktop-CLAUDE\\\\991af103-3ca4-4897-9560-e0175f3bf39d\\\\tasks\\\\bd9awse7b.output\" -Tail 10)"
     ]
   }
 }
