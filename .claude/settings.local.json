@@ -19,7 +19,8 @@
       "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\")",
       "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" /b /a-d)",
       "Bash(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" /b /ad)",
-      "Bash(findstr /v node_modules)"
+      "Bash(findstr /v node_modules)",
+      "Bash(Start-Process *)"
     ]
   }
 }
