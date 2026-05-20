@@ -41,7 +41,8 @@
       "PowerShell(Stop-Process *)",
       "Bash(npm install *)",
       "Bash(powershell *)",
-      "Bash(python3 -c \"import json,sys; u=json.load\\(sys.stdin\\); print\\(list\\(u.keys\\(\\)\\)[:3]\\)\")"
+      "Bash(python3 -c \"import json,sys; u=json.load\\(sys.stdin\\); print\\(list\\(u.keys\\(\\)\\)[:3]\\)\")",
+      "Bash(git commit -m 'fix: remove Sunday closed indicator from caixa card *)"
     ]
   }
 }
