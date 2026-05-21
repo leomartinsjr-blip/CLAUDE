@@ -69,7 +69,8 @@
       "Bash(Start-Sleep -Milliseconds 500)",
       "Bash(Write-Host \"killed\")",
       "Bash(printf 'node_modules/\\\\nuploads/\\\\n.env\\\\ncookies.txt\\\\nserver.log\\\\n')",
-      "Bash(git rm *)"
+      "Bash(git rm *)",
+      "Bash(npx pm2 *)"
     ]
   }
 }
