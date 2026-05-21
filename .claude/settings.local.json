@@ -75,7 +75,9 @@
       "Bash(tasklist *)",
       "PowerShell(Get-NetTCPConnection *)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object {$_.Name -ne \"node_modules\"} | Select-Object Name, PSIsContainer)",
-      "PowerShell(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object {$_.Name -ne \"node_modules\"})"
+      "PowerShell(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object {$_.Name -ne \"node_modules\"})",
+      "Bash(python -c \"import PyPDF2; r=PyPDF2.PdfReader\\(r'c:\\\\Users\\\\Leonardo\\\\Downloads\\\\Especificação Web Service de Saída Padrão - v262.pdf'\\); [print\\(f'=== Page {i+1} ===\\\\n'+r.pages[i].extract_text\\(\\)\\) for i in range\\(min\\(10, len\\(r.pages\\)\\)\\)]\")",
+      "Bash(python3 -c \"import PyPDF2; r=PyPDF2.PdfReader\\(r'c:\\\\Users\\\\Leonardo\\\\Downloads\\\\Especificação Web Service de Saída Padrão - v262.pdf'\\); [print\\(f'=== Page {i+1} ===\\\\n'+r.pages[i].extract_text\\(\\)\\) for i in range\\(min\\(10, len\\(r.pages\\)\\)\\)]\")"
     ]
   }
 }
