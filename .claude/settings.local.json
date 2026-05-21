@@ -72,7 +72,8 @@
       "Bash(git rm *)",
       "Bash(npx pm2 *)",
       "Bash(findstr \"LISTENING\")",
-      "Bash(tasklist *)"
+      "Bash(tasklist *)",
+      "PowerShell(Get-NetTCPConnection *)"
     ]
   }
 }
