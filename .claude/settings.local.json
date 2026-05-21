@@ -73,7 +73,9 @@
       "Bash(npx pm2 *)",
       "Bash(findstr \"LISTENING\")",
       "Bash(tasklist *)",
-      "PowerShell(Get-NetTCPConnection *)"
+      "PowerShell(Get-NetTCPConnection *)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object {$_.Name -ne \"node_modules\"} | Select-Object Name, PSIsContainer)",
+      "PowerShell(dir \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object {$_.Name -ne \"node_modules\"})"
     ]
   }
 }
