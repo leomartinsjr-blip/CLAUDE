@@ -81,7 +81,8 @@
       "Bash(Get-Process node *)",
       "Bash(Stop-Process -Force)",
       "Bash(Select-Object -ExpandProperty Id)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(git *)"
     ]
   }
 }
