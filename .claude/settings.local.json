@@ -62,7 +62,9 @@
       "Bash(Start-Sleep -Seconds 3)",
       "Bash(Get-Content \"C:\\\\Users\\\\Leonardo\\\\AppData\\\\Local\\\\Temp\\\\claude\\\\C--Users-Leonardo-Desktop-CLAUDE\\\\991af103-3ca4-4897-9560-e0175f3bf39d\\\\tasks\\\\bd9awse7b.output\" -Tail 10)",
       "PowerShell(Start-Sleep -Seconds 2; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/api/microvix/lojas-emp\" -TimeoutSec 30 -UseBasicParsing; $r.Content } catch { $_.Exception.Message })",
-      "Bash(node server.js)"
+      "Bash(node server.js)",
+      "Bash(npx dotenvx *)",
+      "Bash(taskkill /F /IM node.exe)"
     ]
   }
 }
