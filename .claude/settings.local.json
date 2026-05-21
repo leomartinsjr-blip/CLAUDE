@@ -64,7 +64,10 @@
       "PowerShell(Start-Sleep -Seconds 2; try { $r = Invoke-WebRequest -Uri \"http://localhost:3000/api/microvix/lojas-emp\" -TimeoutSec 30 -UseBasicParsing; $r.Content } catch { $_.Exception.Message })",
       "Bash(node server.js)",
       "Bash(npx dotenvx *)",
-      "Bash(taskkill /F /IM node.exe)"
+      "Bash(taskkill /F /IM node.exe)",
+      "Bash(Stop-Process -Name node -Force -ErrorAction SilentlyContinue)",
+      "Bash(Start-Sleep -Milliseconds 500)",
+      "Bash(Write-Host \"killed\")"
     ]
   }
 }
