@@ -96,7 +96,13 @@
       "Bash(taskkill /PID 33708 /F)",
       "Bash(taskkill /PID 25168 /F)",
       "Bash(npm start *)",
-      "Bash(code C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas *)"
+      "Bash(code C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas *)",
+      "Bash(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Exclude node_modules)",
+      "Bash(Select-Object Name)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object { $_.Name -ne 'node_modules' } | Select-Object Name, PSIsContainer)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\public\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-Content *)"
     ]
   }
 }
