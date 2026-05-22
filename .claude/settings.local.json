@@ -91,7 +91,9 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\\" | Where-Object { $_.LastWriteTime -gt \\(Get-Date\\).AddDays\\(-2\\) } | Sort-Object LastWriteTime -Descending | Format-Table Name, LastWriteTime, Attributes)",
       "PowerShell(Get-Item *)",
       "Bash(taskkill //F //PID 9124)",
-      "PowerShell(Start-Process \"https://dashboard.render.com\")"
+      "PowerShell(Start-Process \"https://dashboard.render.com\")",
+      "PowerShell(netstat *)",
+      "Bash(taskkill /PID 33708 /F)"
     ]
   }
 }
