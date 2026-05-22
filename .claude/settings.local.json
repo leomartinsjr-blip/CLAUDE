@@ -82,7 +82,8 @@
       "Bash(Stop-Process -Force)",
       "Bash(Select-Object -ExpandProperty Id)",
       "Bash(python -c ' *)",
-      "Bash(git *)"
+      "Bash(git *)",
+      "Bash(copy *)"
     ]
   }
 }
