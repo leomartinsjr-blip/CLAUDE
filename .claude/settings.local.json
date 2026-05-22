@@ -93,7 +93,8 @@
       "Bash(taskkill //F //PID 9124)",
       "PowerShell(Start-Process \"https://dashboard.render.com\")",
       "PowerShell(netstat *)",
-      "Bash(taskkill /PID 33708 /F)"
+      "Bash(taskkill /PID 33708 /F)",
+      "Bash(taskkill /PID 25168 /F)"
     ]
   }
 }
