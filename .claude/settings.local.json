@@ -90,7 +90,8 @@
       "PowerShell(Start-Process \"https://dashboard.render.com/create?type=web\")",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\\" | Where-Object { $_.LastWriteTime -gt \\(Get-Date\\).AddDays\\(-2\\) } | Sort-Object LastWriteTime -Descending | Format-Table Name, LastWriteTime, Attributes)",
       "PowerShell(Get-Item *)",
-      "Bash(taskkill //F //PID 9124)"
+      "Bash(taskkill //F //PID 9124)",
+      "PowerShell(Start-Process \"https://dashboard.render.com\")"
     ]
   }
 }
