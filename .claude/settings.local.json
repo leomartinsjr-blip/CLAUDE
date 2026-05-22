@@ -95,7 +95,8 @@
       "PowerShell(netstat *)",
       "Bash(taskkill /PID 33708 /F)",
       "Bash(taskkill /PID 25168 /F)",
-      "Bash(npm start *)"
+      "Bash(npm start *)",
+      "Bash(code C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas *)"
     ]
   }
 }
