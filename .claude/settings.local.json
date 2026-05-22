@@ -83,7 +83,8 @@
       "Bash(Select-Object -ExpandProperty Id)",
       "Bash(python -c ' *)",
       "Bash(git *)",
-      "Bash(copy *)"
+      "Bash(copy *)",
+      "PowerShell(Start-Process \"https://github.com/leomartinsjr-blip/gestao-lojas\"; Start-Process \"https://dashboard.render.com\")"
     ]
   }
 }
