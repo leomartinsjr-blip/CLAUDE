@@ -84,7 +84,8 @@
       "Bash(python -c ' *)",
       "Bash(git *)",
       "Bash(copy *)",
-      "PowerShell(Start-Process \"https://github.com/leomartinsjr-blip/gestao-lojas\"; Start-Process \"https://dashboard.render.com\")"
+      "PowerShell(Start-Process \"https://github.com/leomartinsjr-blip/gestao-lojas\"; Start-Process \"https://dashboard.render.com\")",
+      "PowerShell(Start-Process \"https://dashboard.render.com/billing\")"
     ]
   }
 }
