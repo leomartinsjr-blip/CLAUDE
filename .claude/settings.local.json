@@ -104,7 +104,9 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\public\" | ForEach-Object { $_.Name })",
       "PowerShell(Get-Content *)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name, LastWriteTime, Length)",
-      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Force | ForEach-Object { $_.FullName })"
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Force | ForEach-Object { $_.FullName })",
+      "Bash(gh repo *)",
+      "Bash(gh api *)"
     ]
   }
 }
