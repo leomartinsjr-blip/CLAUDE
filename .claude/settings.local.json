@@ -108,7 +108,8 @@
       "Bash(gh repo *)",
       "Bash(gh api *)",
       "PowerShell(Start-Process \"https://github.com/leomartinsjr-blip/gestao-lojas\"; Start-Process \"https://render.com/dashboard\")",
-      "PowerShell(Start-Process \"https://render.com/dashboard\")"
+      "PowerShell(Start-Process \"https://render.com/dashboard\")",
+      "Bash(npm uninstall *)"
     ]
   }
 }
