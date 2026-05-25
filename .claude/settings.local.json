@@ -106,7 +106,8 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name, LastWriteTime, Length)",
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Force | ForEach-Object { $_.FullName })",
       "Bash(gh repo *)",
-      "Bash(gh api *)"
+      "Bash(gh api *)",
+      "PowerShell(Start-Process \"https://github.com/leomartinsjr-blip/gestao-lojas\"; Start-Process \"https://render.com/dashboard\")"
     ]
   }
 }
