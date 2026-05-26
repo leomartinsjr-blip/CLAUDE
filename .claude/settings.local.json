@@ -111,7 +111,8 @@
       "PowerShell(Start-Process \"https://render.com/dashboard\")",
       "Bash(npm uninstall *)",
       "Bash(Get-Item \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\server.js\")",
-      "Bash(Select-Object Length)"
+      "Bash(Select-Object Length)",
+      "PowerShell(Start-Process \"https://dashboard.render.com/web/srv-d86tl5mq1p3s73cdpbdg\")"
     ]
   }
 }
