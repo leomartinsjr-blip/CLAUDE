@@ -116,7 +116,8 @@
       "Bash(Get-ChildItem C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas -Exclude node_modules)",
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name, PSIsContainer)",
       "Bash(transfer)",
-      "Bash(sugest\")"
+      "Bash(sugest\")",
+      "Bash(python3 -c ' *)"
     ]
   }
 }
