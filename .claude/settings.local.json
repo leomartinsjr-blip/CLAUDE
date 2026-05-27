@@ -112,7 +112,9 @@
       "Bash(npm uninstall *)",
       "Bash(Get-Item \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\server.js\")",
       "Bash(Select-Object Length)",
-      "PowerShell(Start-Process \"https://dashboard.render.com/web/srv-d86tl5mq1p3s73cdpbdg\")"
+      "PowerShell(Start-Process \"https://dashboard.render.com/web/srv-d86tl5mq1p3s73cdpbdg\")",
+      "Bash(Get-ChildItem C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas -Exclude node_modules)",
+      "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name, PSIsContainer)"
     ]
   }
 }
