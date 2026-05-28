@@ -117,7 +117,8 @@
       "PowerShell(Get-ChildItem \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" | Where-Object { $_.Name -ne \"node_modules\" } | Select-Object Name, PSIsContainer)",
       "Bash(transfer)",
       "Bash(sugest\")",
-      "Bash(python3 -c ' *)"
+      "Bash(python3 -c ' *)",
+      "Bash(grep -v \"//.*require\")"
     ]
   }
 }
