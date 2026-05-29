@@ -122,7 +122,20 @@
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Recurse -Include \"*.js\", \"*.html\", \"*.json\")",
       "Bash(Select-Object -First 50)",
       "Bash(Format-Table Name, FullName)",
-      "Bash(grep -E \"\\\\.json|\\\\.js$\")"
+      "Bash(grep -E \"\\\\.json|\\\\.js$\")",
+      "Bash(sed -n '4615,4630p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '4905,4920p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '5025,5040p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '1055,1075p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '1282,1302p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '2516,2540p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '461,480p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '581,610p' /c/Users/Leonardo/Desktop/gestao-lojas/server.js)",
+      "Bash(sed -n '308,320p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
+      "Bash(sed -n '880,900p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
+      "Bash(sed -n '1158,1175p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
+      "Bash(sed -n '4290,4330p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
+      "Bash(sed -n '5258,5300p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)"
     ]
   }
 }
