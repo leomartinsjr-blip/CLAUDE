@@ -118,7 +118,11 @@
       "Bash(transfer)",
       "Bash(sugest\")",
       "Bash(python3 -c ' *)",
-      "Bash(grep -v \"//.*require\")"
+      "Bash(grep -v \"//.*require\")",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Recurse -Include \"*.js\", \"*.html\", \"*.json\")",
+      "Bash(Select-Object -First 50)",
+      "Bash(Format-Table Name, FullName)",
+      "Bash(grep -E \"\\\\.json|\\\\.js$\")"
     ]
   }
 }
