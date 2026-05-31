@@ -135,7 +135,10 @@
       "Bash(sed -n '880,900p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
       "Bash(sed -n '1158,1175p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
       "Bash(sed -n '4290,4330p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
-      "Bash(sed -n '5258,5300p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)"
+      "Bash(sed -n '5258,5300p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Recurse -Force)",
+      "Bash(grep -E \"\\\\.\\(js|json\\)$\")",
+      "Bash(grep -E \"\\\\.\\(js|html\\)$\")"
     ]
   }
 }
