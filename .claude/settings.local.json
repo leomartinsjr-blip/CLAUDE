@@ -138,7 +138,12 @@
       "Bash(sed -n '5258,5300p' /c/Users/Leonardo/Desktop/gestao-lojas/public/app.js)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Recurse -Force)",
       "Bash(grep -E \"\\\\.\\(js|json\\)$\")",
-      "Bash(grep -E \"\\\\.\\(js|html\\)$\")"
+      "Bash(grep -E \"\\\\.\\(js|html\\)$\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\CLAUDE\" -Directory | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\CLAUDE\" | ForEach-Object { $_.Name })",
+      "Bash(Get-ChildItem C:\\\\Users\\\\Leonardo\\\\Desktop -Directory)",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f['path']\\) for f in data.get\\('tree',[]\\) if not f['path'].startswith\\('.'\\) and '.' in f['path'].split\\('/'\\)[-1]]\")",
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f['path']\\) for f in data.get\\('tree',[]\\) if f['type']=='blob']\")"
     ]
   }
 }
