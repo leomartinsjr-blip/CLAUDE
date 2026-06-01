@@ -143,7 +143,11 @@
       "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\CLAUDE\" | ForEach-Object { $_.Name })",
       "Bash(Get-ChildItem C:\\\\Users\\\\Leonardo\\\\Desktop -Directory)",
       "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f['path']\\) for f in data.get\\('tree',[]\\) if not f['path'].startswith\\('.'\\) and '.' in f['path'].split\\('/'\\)[-1]]\")",
-      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f['path']\\) for f in data.get\\('tree',[]\\) if f['type']=='blob']\")"
+      "Bash(python3 -c \"import json,sys; data=json.load\\(sys.stdin\\); [print\\(f['path']\\) for f in data.get\\('tree',[]\\) if f['type']=='blob']\")",
+      "Bash(awk '{s+=$1} END {printf \"%.0f\\\\n\", s}')",
+      "Bash(wslpath -w /tmp/gestao-lojas)",
+      "Bash(cmd //c \"dir C:\\\\Users\\\\Leonardo\\\\AppData\\\\Local\\\\Temp\\\\gestao-lojas\")",
+      "Bash(cd *)"
     ]
   }
 }
