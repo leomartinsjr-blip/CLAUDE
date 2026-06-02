@@ -152,7 +152,8 @@
       "Bash(Select-Object Name, FullName)",
       "Bash(Format-List)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Exclude node_modules -Recurse -Filter \"*.js\")",
-      "Bash(xargs ls -la)"
+      "Bash(xargs ls -la)",
+      "Bash(python *)"
     ]
   }
 }
