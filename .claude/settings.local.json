@@ -153,7 +153,11 @@
       "Bash(Format-List)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Exclude node_modules -Recurse -Filter \"*.js\")",
       "Bash(xargs ls -la)",
-      "Bash(python *)"
+      "Bash(python *)",
+      "Bash(Get-Content \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\server.js\")",
+      "Bash(Measure-Object -Line)",
+      "PowerShell(\\(Get-Content \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\server.js\" | Measure-Object -Line\\).Lines)",
+      "PowerShell(node -e \"const cm = require\\('connect-mongo'\\); console.log\\('type:', typeof cm\\); console.log\\('keys:', Object.keys\\(cm\\).join\\(', '\\)\\)\" 2>&1)"
     ]
   }
 }
