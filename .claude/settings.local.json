@@ -147,7 +147,10 @@
       "Bash(awk '{s+=$1} END {printf \"%.0f\\\\n\", s}')",
       "Bash(wslpath -w /tmp/gestao-lojas)",
       "Bash(cmd //c \"dir C:\\\\Users\\\\Leonardo\\\\AppData\\\\Local\\\\Temp\\\\gestao-lojas\")",
-      "Bash(cd *)"
+      "Bash(cd *)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\CLAUDE\" -Force)",
+      "Bash(Select-Object Name, FullName)",
+      "Bash(Format-List)"
     ]
   }
 }
