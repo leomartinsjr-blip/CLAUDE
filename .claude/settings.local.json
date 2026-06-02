@@ -150,7 +150,9 @@
       "Bash(cd *)",
       "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\CLAUDE\" -Force)",
       "Bash(Select-Object Name, FullName)",
-      "Bash(Format-List)"
+      "Bash(Format-List)",
+      "Bash(Get-ChildItem -Path \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\" -Exclude node_modules -Recurse -Filter \"*.js\")",
+      "Bash(xargs ls -la)"
     ]
   }
 }
