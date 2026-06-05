@@ -158,7 +158,8 @@
       "Bash(Measure-Object -Line)",
       "PowerShell(\\(Get-Content \"C:\\\\Users\\\\Leonardo\\\\Desktop\\\\gestao-lojas\\\\server.js\" | Measure-Object -Line\\).Lines)",
       "PowerShell(node -e \"const cm = require\\('connect-mongo'\\); console.log\\('type:', typeof cm\\); console.log\\('keys:', Object.keys\\(cm\\).join\\(', '\\)\\)\" 2>&1)",
-      "Bash(grep -v \"CRM\\\\|crm\\\\|boardSel\\\\|userBoard\\\\|targetBoard\\\\|board =\\\\|board:\\\\|board,\\\\|board\\)\\\\|board |\\\\[board\\\\]|\\\\{board\\\\}\")"
+      "Bash(grep -v \"CRM\\\\|crm\\\\|boardSel\\\\|userBoard\\\\|targetBoard\\\\|board =\\\\|board:\\\\|board,\\\\|board\\)\\\\|board |\\\\[board\\\\]|\\\\{board\\\\}\")",
+      "Bash(grep -v \"//.*comissao\")"
     ]
   }
 }
